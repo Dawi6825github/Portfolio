@@ -1,0 +1,53 @@
+/* Container for the filter buttons */
+.category-filter {
+  margin-bottom: 20px;
+}
+
+/* Style for filter buttons */
+.filter-button {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 16px;
+}
+
+.filter-button.active,
+.filter-button:hover {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+/* Container for the project cards */
+.project-gallery {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px 0;
+  gap: 20px;
+}
+
+/* Style for each project card */
+.project-card-container {
+  flex: 0 0 auto;
+}
+
+.project-card {
+  background: rgba(255, 255, 255, 0.9); /* White with transparency */
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 300px; /* Adjust the width as needed */
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
