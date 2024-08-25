@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styled from 'styled-components';
 import { FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
 import backgroundImage from '../assets/th.jpg';
-// Background Image Style
+import { auth, db } from '../firebase';  // Import auth and db from the firebase.js file
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+// Your component code...
+
 const ContactSection = styled.section`
   display: flex;
   justify-content: center;
@@ -88,22 +92,45 @@ const SocialMedia = styled.div`
 const validationSchema = Yup.object({
   name: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email address').required('Required'),
-  message: Yup.string().required('Required'),
+  password: Yup.string().min(6, 'Password must be at least 6 characters').required('Required'),
 });
 
 const Contact = () => {
+  const [error, setError] = useState('');
+
+  
   return (
     <ContactSection>
       <FormContainer>
         <h2 style={{ color: '#fff', textAlign: 'center' }}>Contact Us</h2>
         <Formik
-          initialValues={{ name: '', email: '', message: '' }}
+          initialValues={{ name: '', email: '', password: '', message: "" }}
           validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            // Handle form submission here
-            console.log(values);
-            setSubmitting(false);
+          onSubmit={async (values, { setSubmitting }) => {
+            const { name, email, password, message} = values;
+            try {
+              const userCredential = await createUserWithEmailAndPassword(auth, email, password ,message);
+              const user = userCredential.user;
+
+              // Save user data to Firestore
+              await setDoc(doc(db, 'users', user.uid), {
+                name: name,
+                email: email,
+                password: password,
+                message: message,
+              });
+
+              console.log('User signed up and data saved:', user);
+              setError('');
+            } catch (error) {
+              console.error('Error during sign-up:', error.message);
+              setError(error.message);
+            } finally {
+              setSubmitting(false);
+            }
           }}
+
+          
         >
           <Form>
             <FieldContainer>
@@ -111,16 +138,26 @@ const Contact = () => {
               <Input id="name" name="name" type="text" />
               <ErrorMessage name="name" component={ErrorText} />
             </FieldContainer>
+
             <FieldContainer>
               <Label htmlFor="email">Email</Label>
               <Input id="email" name="email" type="email" />
               <ErrorMessage name="email" component={ErrorText} />
             </FieldContainer>
+
+            <FieldContainer>
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" name="password" type="password" />
+              <ErrorMessage name="password" component={ErrorText} />
+            </FieldContainer>
+
             <FieldContainer>
               <Label htmlFor="message">Message</Label>
-              <Input id="message" name="message" as="textarea" rows="4" />
+              <Input id="message" name="message" type="message" />
               <ErrorMessage name="message" component={ErrorText} />
             </FieldContainer>
+
+            {error && <ErrorText>{error}</ErrorText>}
             <SubmitButton type="submit">Submit</SubmitButton>
           </Form>
         </Formik>
