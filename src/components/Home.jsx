@@ -103,7 +103,7 @@ const Img = styled.img`
   width: 200px;
   height: 200px;
   margin-Right: 50px;
-  border-radius: 50%; /* Makes the image circular */
+  border-radius: 15%; /* Makes the image circular */
   object-fit: cover;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
@@ -135,11 +135,12 @@ const Home = () => {
         </Content>
               
           <content1>
-          <Img src='https://firebasestorage.googleapis.com/v0/b/portfolio-datnet.appspot.com/o/photo_2024-08-05_15-28-03.jpg?alt=media&token=0ec331fc-ffda-4f49-a176-d34c75573e0e'/>
+          <Img src='https://firebasestorage.googleapis.com/v0/b/portfolio-datnet.appspot.com/o/Untitled%20design%20(1).gif?alt=media&token=d42f3606-3c7f-4472-b5bc-2e1b01dacf89'/>
             </content1>    
        
 
       </HomeSection>
+      
     </Parallax>
   );
 };

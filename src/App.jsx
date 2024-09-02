@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Home from './components/Home';
-import About from './components/About';
-import Portfolio from './components/Portfolio';
-import Testimonials from './components/Testimonials';
-import Contact from './components/Contacts.js';
-import Footer from './components/Footer';
+import Navbar from './components/Navbar.jsx';
+import Home from './components/Home.jsx';
+import About from './components/About.jsx';
+import Portfolio from './components/Portfolio.jsx';
+import Testimonials from './components/Testimonials.jsx';
+import Contact from './components/Contacts.jsx';
+import Footer from './components/Footer.jsx';
 import { GlobalStyle } from './Styles.js';
 
 function App() {

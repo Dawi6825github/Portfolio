@@ -23,7 +23,7 @@ border-radius: 10px;
 const Image = styled.img`
   width: 70%;
   height: 450px;
-  border-radius: 10px;
+  border-radius: 50px;
   transition: transform 0.66s ease;
 
   &:hover {

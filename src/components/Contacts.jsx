@@ -7,7 +7,6 @@ import backgroundImage from '../assets/th.jpg';
 import { auth, db } from '../firebase';  // Import auth and db from the firebase.js file
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-// Your component code...
 
 const ContactSection = styled.section`
   display: flex;
@@ -18,7 +17,6 @@ const ContactSection = styled.section`
   background-size: cover;
 `;
 
-// Form Container Style
 const FormContainer = styled.div`
   background: rgba(0, 0, 0, 0.7);
   padding: 2rem;
@@ -27,7 +25,6 @@ const FormContainer = styled.div`
   width: 100%;
 `;
 
-// Form Field Style
 const FieldContainer = styled.div`
   margin-bottom: 1rem;
 `;
@@ -70,7 +67,6 @@ const SubmitButton = styled.button`
   }
 `;
 
-// Social Media Links Style
 const SocialMedia = styled.div`
   margin-top: 1rem;
   display: flex;
@@ -88,7 +84,6 @@ const SocialMedia = styled.div`
   }
 `;
 
-// Form Validation Schema
 const validationSchema = Yup.object({
   name: Yup.string().required('Required'),
   email: Yup.string().email('Invalid email address').required('Required'),
@@ -97,22 +92,22 @@ const validationSchema = Yup.object({
 
 const Contact = () => {
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  
   return (
     <ContactSection>
       <FormContainer>
         <h2 style={{ color: '#fff', textAlign: 'center' }}>Contact Us</h2>
         <Formik
-          initialValues={{ name: '', email: '', password: '', message: "" }}
+          initialValues={{ name: '', email: '', password: '', message: '' }}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            const { name, email, password, message} = values;
+          onSubmit={async (values, { setSubmitting, resetForm }) => {
+            const { name, email, password, message } = values;
+            setLoading(true);
             try {
-              const userCredential = await createUserWithEmailAndPassword(auth, email, password ,message);
+              const userCredential = await createUserWithEmailAndPassword(auth, email, password);
               const user = userCredential.user;
 
-              // Save user data to Firestore
               await setDoc(doc(db, 'users', user.uid), {
                 name: name,
                 email: email,
@@ -122,15 +117,15 @@ const Contact = () => {
 
               console.log('User signed up and data saved:', user);
               setError('');
+              resetForm(); // Clear form fields
             } catch (error) {
               console.error('Error during sign-up:', error.message);
               setError(error.message);
             } finally {
+              setLoading(false);
               setSubmitting(false);
             }
           }}
-
-          
         >
           <Form>
             <FieldContainer>
@@ -153,12 +148,14 @@ const Contact = () => {
 
             <FieldContainer>
               <Label htmlFor="message">Message</Label>
-              <Input id="message" name="message" type="message" />
+              <Input id="message" name="message" type="text" />
               <ErrorMessage name="message" component={ErrorText} />
             </FieldContainer>
 
             {error && <ErrorText>{error}</ErrorText>}
-            <SubmitButton type="submit">Submit</SubmitButton>
+            <SubmitButton type="submit" disabled={loading}>
+              {loading ? 'Loading...' : 'Submit'}
+            </SubmitButton>
           </Form>
         </Formik>
         <SocialMedia>

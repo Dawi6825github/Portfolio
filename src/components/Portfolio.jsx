@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Added useEffect
 import { Section } from '../Styles';
 import { Link } from 'react-router-dom';
-import { projects } from './projects'; // Import the project data
 import backgroundImage from '../assets/th (3).jpg';
+import { db } from '../firebase'; // Import the Firebase Firestore instance
+import { collection, getDocs } from 'firebase/firestore'; // Added correct imports from Firebase
 
 const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [projects, setProjects] = useState([]);
 
   const categories = ['All', 'Web Development', 'Full Stack Projects'];
 
-  const filteredProjects = selectedCategory === 'All' 
-    ? projects 
-    : projects.filter(project => project.category === selectedCategory);
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const querySnapshot = await getDocs(collection(db, 'project'));
+      const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setProjects(projectsData);
+    };
+
+    fetchProjects();
+  }, []);
+
+  const filteredProjects = selectedCategory === 'All'
+  ? projects
+  : projects.filter(project => project.category === selectedCategory);
+
+console.log('Filtered Projects:', filteredProjects); // Add this line to debug
 
   return (
     <Section style={styles.section}>
@@ -41,7 +55,9 @@ const Portfolio = () => {
             <div key={project.id} style={styles.projectCard}>
               <h3 style={styles.projectTitle}>{project.title}</h3>
               <p style={styles.projectDescription}>{project.description}</p>
-              <p style={styles.projectTechnologies}><strong>Technologies:</strong> {project.technologies.join(', ')}</p>
+              <p style={styles.projectTechnologies}>
+                <strong>Technologies:</strong> {project.technologies ? project.technologies.split(',').map(item => item.trim()).join(', ') : 'N/A'}
+              </p>
               <Link to={`/projects/${project.id}`} style={styles.detailsLink}>View Details</Link>
               <a href={project.github} target="_blank" rel="noopener noreferrer" style={styles.githubLink}>
                 View on GitHub
@@ -58,7 +74,7 @@ const styles = {
   section: {
     position: 'relative',
     padding: '2rem',
-    backgroundImage: `url("${backgroundImage}")`,
+    backgroundImage: `url(${backgroundImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backdropFilter: 'blur(10px)',

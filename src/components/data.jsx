@@ -4,7 +4,7 @@ export const projects = [
       title: 'Datnet Portfolio',
       category: 'Web Development',
       description: 'A personal portfolio showcasing my web development skills.',
-      technologies: ['React', 'CSS', 'JavaScript'],
+      technologies: ['React.js', 'CSS', 'JavaScript'],
       link: '/project/datnet-portfolio',
       github: 'https://github.com/yourusername/datnet-portfolio'
     },

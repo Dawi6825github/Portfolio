@@ -10,6 +10,7 @@ const Nav = styled.nav`
   background-color: transparent; /* Set background to transparent */
   color: black;
   margin: -20px;
+  position:relative;
 
   @media (max-width: 768px) {
     flex-direction: column;
